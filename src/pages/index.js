@@ -24,7 +24,7 @@ export default function Home({ allPosts }) {
   let submitForm = async (e) => {
     e.preventDefault();
     let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify({
         name: "Can Ataseven",
         votes: [{ number, vote }]
