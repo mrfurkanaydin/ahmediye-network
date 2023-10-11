@@ -1,104 +1,64 @@
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Home({ allPosts }) {
-  const [datas, setDatas] = useState(allPosts.data);
+export default function Home() {
   const [number, setNumber] = useState();
-  const [vote, setVote] = useState();
-  const [ort, setOrt] = useState(0);
-  // useEffect(() => {
-  //   getPosts();
-  // }, []);
-  const getPosts = async () => {
-    let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    res = await res.json();
-    setDatas(res.data);
-    console.log(datas);
-  };
+  const router = useRouter();
 
-  let submitForm = async (e) => {
-    e.preventDefault();
-    let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
-      method: "PUT",
-      body: JSON.stringify({
-        name: "Can Ataseven",
-        votes: [{ number, vote }]
-      })
-    });
-    res = await res.json();
-    window.location.reload(false);
+  useEffect(() => {
+    
+  }, []);
+  useEffect(() => {
+    const storage = checkLocalStorage();
+    if (storage !== null) {
+      // Local storage'da "number" öğesi varsa, istediğiniz sayfaya yönlendirin.
+      router.push(`/votes`);
+    }
+  }, []);
+
+  const submitForm = async () => {
+    await localStorage.setItem("number", number);
+    router.push("/votes", { scroll: false });
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col justify-center items-center gap-3 mx-10">
-        <div>Ahmediye Oylama Sistemi</div>
-        {datas.map((data) => {
-          const voteValues = data.votes.map((vote) => vote.vote);
-          const totalVotes = voteValues.length;
-          const sumVotes = voteValues.reduce((total, vote) => total + vote, 0);
-          const averageVote = sumVotes / totalVotes;
-          return (
-            <div key={data.name}>
-              <Image
-                src="/image1.png"
-                width={256}
-                height={380}
-                alt="Can Ataseven"
-              />
-              <div>{data.name}</div>
-              <div>{averageVote.toFixed(1)}</div>
-              <input
-                type="number"
-                min={1}
-                max={106}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Talebe Numaran"
-                required
-                onChange={(event) => {
-                  event.target.value > 106
-                    ? setNumber(Number(106))
-                    : setNumber(Number(event.target.value));
-                }}
-                value={number}
-              />
-              <input
-                type="number"
-                min={1}
-                max={10}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Oy (1 - 10 Arası Olmalı)"
-                required
-                onChange={(event) => {
-                  event.target.value > 10
-                    ? setVote(Number(10))
-                    : setVote(Number(event.target.value));
-                }}
-                value={vote}
-              />
-              <button onClick={submitForm}>Gönder</button>
-            </div>
-          );
-        })}
+    <div className="flex flex-col gap-3 justify-center items-center mx-10">
+      <div className="text-2xl font-bold mt-3 my-2">
+        Ahmediye Oylama Sistemi
       </div>
+      <p className="text-sm  text-red-700">
+        Talebe Numaranızı Giriniz (Yanlış Girmeniz Durumunda
+        Değiştiremeyeceksiniz!)
+      </p>
+      <input
+        type="number"
+        min={1}
+        max={106}
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Talebe Numaran"
+        required
+        onChange={(event) => {
+          event.target.value > 106
+            ? setNumber(Number(106))
+            : setNumber(Number(event.target.value));
+        }}
+        value={number}
+      />
+      <button
+        onClick={submitForm}
+        className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 mt-2 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Kaydet
+      </button>
     </div>
   );
 }
-export async function getServerSideProps(context) {
-  let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-  let allPosts = await res.json();
 
-  return {
-    props: { allPosts }
-  };
+function checkLocalStorage() {
+  const number = localStorage.getItem("number");
+  if (number) {
+    console.log(parseInt(number, 10));
+    return parseInt(number, 10);
+  }
+  return null;
 }
