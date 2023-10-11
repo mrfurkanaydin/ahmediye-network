@@ -10,7 +10,7 @@ export default function Home({ allPosts }) {
   //   getPosts();
   // }, []);
   const getPosts = async () => {
-    let res = await fetch("http://localhost:3000/api/posts", {
+    let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -23,7 +23,7 @@ export default function Home({ allPosts }) {
 
   let submitForm = async (e) => {
     e.preventDefault();
-    let res = await fetch("http://localhost:3000/api/posts", {
+    let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
       method: "POST",
       body: JSON.stringify({
         name: "Can Ataseven",
@@ -90,7 +90,7 @@ export default function Home({ allPosts }) {
   );
 }
 export async function getServerSideProps(context) {
-  let res = await fetch("http://localhost:3000/api/posts", {
+  let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
