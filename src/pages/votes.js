@@ -5,13 +5,12 @@ export default function Votes({ allPosts }) {
   const [datas, setDatas] = useState(allPosts.data);
   const [vote, setVote] = useState();
 
-  let submitForm = async (e) => {
-    let number = Number(await localStorage.getItem("number"))
-    e.preventDefault();
+  let submitForm = async (name) => {
+    let number = Number(await localStorage.getItem("number"));
     let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
       method: "PUT",
       body: JSON.stringify({
-        name: "Can Ataseven",
+        name,
         votes: [{ number, vote }]
       })
     });
@@ -22,7 +21,9 @@ export default function Votes({ allPosts }) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col justify-center items-center gap-3 mx-5">
-        <div className="text-2xl font-bold mt-3 my-2">Ahmediye Oylama Sistemi</div>
+        <div className="text-2xl font-bold mt-3 my-2">
+          Ahmediye Oylama Sistemi
+        </div>
         <>
           {datas.map((data) => {
             const voteValues = data.votes.map((vote) => vote.vote);
@@ -32,17 +33,23 @@ export default function Votes({ allPosts }) {
               0
             );
             const averageVote = sumVotes / totalVotes;
+
             return (
               <div key={data.name} className="flex flex-col gap-2 items-center">
-                <Image
-                  src="/image1.png"
-                  width={256}
-                  height={380}
-                  alt="a"
-                />
+                <Image src="/image1.png" width={256} height={380} alt="a" />
                 <div className="text-2xl font-bold">{data.name}</div>
-                <div>{averageVote > 5 ? <span className="text-green-400">{averageVote.toFixed(1)}</span> : <span className="text-red-700">{averageVote.toFixed(1)}</span>}</div>
-                
+                <div>
+                  {averageVote > 5 ? (
+                    <span className="text-green-400">
+                      {averageVote.toFixed(1)}
+                    </span>
+                  ) : (
+                    <span className="text-red-700">
+                      {averageVote.toFixed(1)}
+                    </span>
+                  )}
+                </div>
+
                 <input
                   type="number"
                   min={1}
@@ -58,7 +65,7 @@ export default function Votes({ allPosts }) {
                   value={vote}
                 />
                 <button
-                  onClick={submitForm}
+                  onClick={() => submitForm(data.name)}
                   className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
                   Gönder
@@ -66,7 +73,7 @@ export default function Votes({ allPosts }) {
               </div>
             );
           })}
-        </> 
+        </>
       </div>
     </div>
   );
