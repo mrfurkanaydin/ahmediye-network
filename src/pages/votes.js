@@ -3,10 +3,10 @@ import { useState } from "react";
 
 export default function Votes({ allPosts }) {
   const [datas, setDatas] = useState(allPosts.data);
-  const [number, setNumber] = useState();
   const [vote, setVote] = useState();
 
   let submitForm = async (e) => {
+    let number = Number(await localStorage.getItem("number"))
     e.preventDefault();
     let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
       method: "PUT",
@@ -42,20 +42,7 @@ export default function Votes({ allPosts }) {
                 />
                 <div className="text-2xl font-bold">{data.name}</div>
                 <div>{averageVote > 5 ? <span className="text-green-400">{averageVote.toFixed(1)}</span> : <span className="text-red-700">{averageVote.toFixed(1)}</span>}</div>
-                <input
-                  type="number"
-                  min={1}
-                  max={106}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Talebe Numaran"
-                  required
-                  onChange={(event) => {
-                    event.target.value > 106
-                      ? setNumber(Number(106))
-                      : setNumber(Number(event.target.value));
-                  }}
-                  value={number}
-                />
+                
                 <input
                   type="number"
                   min={1}
