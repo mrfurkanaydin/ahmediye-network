@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default function Votes({ allPosts, zort }) {
+export default function Votes({ allPosts }) {
   const [datas, setDatas] = useState(allPosts.data);
   const [vote, setVote] = useState();
   const [voteList, setVoteList] = useState();
@@ -10,13 +9,11 @@ export default function Votes({ allPosts, zort }) {
     getData();
   }, []);
 
-  console.log(local);
   const getData = async () => {
     const res = JSON.parse(localStorage.getItem("voteList"));
     setLocal(res);
   };
   const findItemByName = (nameToFind) => {
-    console.log(local);
     if (local != null) {
       const selectedItem = local.find((item) => item === nameToFind);
       return selectedItem == undefined ? false : true;
