@@ -35,7 +35,7 @@ export default function Votes({ allPosts, zort }) {
         JSON.stringify([...voteList, name])
       );
     }
-    let res = await fetch(`http://localhost:3000/api/posts`, {
+    let res = await fetch(`https://ahmediye-network.vercel.app/api/posts`, {
       method: "PUT",
       body: JSON.stringify({
         name,
@@ -112,7 +112,7 @@ export default function Votes({ allPosts, zort }) {
 }
 
 export async function getServerSideProps(context) {
-  let res = await fetch(`http://localhost:3000/api/posts`, {
+  let res = await fetch(`https://ahmediye-network.vercel.app/api/posts`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
