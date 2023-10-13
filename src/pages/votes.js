@@ -93,7 +93,7 @@ export default function Votes({ allPosts, zort }) {
                       ? setVote(Number(10))
                       : setVote(Number(event.target.value));
                   }}
-                  value={vote}
+                  value={vote == 0 ? setVote() : vote}
                 />
                 <button
                   onClick={() => submitForm(data.name)}
