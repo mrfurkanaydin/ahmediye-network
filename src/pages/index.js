@@ -59,7 +59,6 @@ export default function Home() {
 function checkLocalStorage() {
   const number = localStorage.getItem("number");
   if (number) {
-    console.log(parseInt(number, 10));
     return parseInt(number, 10);
   }
   return null;

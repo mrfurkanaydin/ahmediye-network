@@ -1,13 +1,41 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Votes({ allPosts }) {
+export default function Votes({ allPosts, zort }) {
   const [datas, setDatas] = useState(allPosts.data);
   const [vote, setVote] = useState();
+  const [voteList, setVoteList] = useState();
+  const [local, setLocal] = useState();
+  useEffect(() => {
+    getData();
+  }, []);
 
+  console.log(local);
+  const getData = async () => {
+    const res = JSON.parse(localStorage.getItem("voteList"));
+    setLocal(res);
+  };
+  const findItemByName = (nameToFind) => {
+    console.log(local);
+    if (local != null) {
+      const selectedItem = local.find((item) => item === nameToFind);
+      return selectedItem == undefined ? false : true;
+    }
+    return false;
+  };
   let submitForm = async (name) => {
     let number = Number(await localStorage.getItem("number"));
-    let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
+    let voteList = JSON.parse(await localStorage.getItem("voteList"));
+    setVoteList(voteList);
+    if (localStorage.getItem("voteList") == null) {
+      await localStorage.setItem("voteList", JSON.stringify([name]));
+    } else {
+      await localStorage.setItem(
+        "voteList",
+        JSON.stringify([...voteList, name])
+      );
+    }
+    let res = await fetch(`http://localhost:3000/api/posts`, {
       method: "PUT",
       body: JSON.stringify({
         name,
@@ -33,7 +61,6 @@ export default function Votes({ allPosts }) {
               0
             );
             const averageVote = sumVotes / totalVotes;
-
             return (
               <div key={data.name} className="flex flex-col gap-2 items-center">
                 <Image src="/image1.png" width={256} height={380} alt="a" />
@@ -66,9 +93,14 @@ export default function Votes({ allPosts }) {
                 />
                 <button
                   onClick={() => submitForm(data.name)}
+                  disabled={findItemByName(data.name)}
                   className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
-                  Gönder
+                  {findItemByName(data.name) ? (
+                    <>Oy Kullandınız</>
+                  ) : (
+                    <>Oy Kullan</>
+                  )}
                 </button>
               </div>
             );
@@ -78,8 +110,9 @@ export default function Votes({ allPosts }) {
     </div>
   );
 }
+
 export async function getServerSideProps(context) {
-  let res = await fetch("https://ahmediye-network.vercel.app/api/posts", {
+  let res = await fetch(`http://localhost:3000/api/posts`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
