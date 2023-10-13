@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export default function Votes({ allPosts }) {
   const [datas, setDatas] = useState(allPosts.data);
   const [vote, setVote] = useState();
+  const [votes, setVotes] = useState({});
   const [voteList, setVoteList] = useState();
   const [local, setLocal] = useState();
   useEffect(() => {
@@ -12,6 +13,18 @@ export default function Votes({ allPosts }) {
   const getData = async () => {
     const res = JSON.parse(localStorage.getItem("voteList"));
     setLocal(res);
+  };
+  const onChangeText = (event, name) => {
+    let val =
+      event.target.value > 10
+        ? 10
+        : event.target.value < 0
+        ? 1
+        : event.target.value;
+    setVotes({
+      ...votes,
+      [name]: Number(val)
+    });
   };
   const findItemByName = (nameToFind) => {
     if (local != null) {
@@ -24,7 +37,7 @@ export default function Votes({ allPosts }) {
     let number = Number(await localStorage.getItem("number"));
     let voteList = JSON.parse(await localStorage.getItem("voteList"));
     setVoteList(voteList);
-    if (vote == undefined) {
+    if (votes[name] == undefined) {
       alert("Lütfen Bir Puan Giriniz");
       return;
     }
@@ -40,7 +53,7 @@ export default function Votes({ allPosts }) {
       method: "PUT",
       body: JSON.stringify({
         name,
-        votes: [{ number, vote }]
+        votes: [{ number, vote: votes[name] }]
       })
     });
     res = await res.json();
@@ -85,12 +98,23 @@ export default function Votes({ allPosts }) {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="1 - 10 Arası Puan Veriniz"
                   required
+                  // onChange={(event) => {
+                  //   event.target.value > 10
+                  //     ? setVote(Number(10))
+                  //     : setVote(Number(event.target.value));
+                  // }}
                   onChange={(event) => {
-                    event.target.value > 10
-                      ? setVote(Number(10))
-                      : setVote(Number(event.target.value));
+                    onChangeText(event, data.name);
                   }}
-                  value={vote == 0 ? setVote() : vote}
+                  disabled={findItemByName(data.name)}
+                  value={
+                    votes[data.name] == 0
+                      ? setVotes({
+                          ...votes,
+                          [data.name]: undefined
+                        })
+                      : votes[data.name]
+                  }
                 />
                 <button
                   onClick={() => submitForm(data.name)}

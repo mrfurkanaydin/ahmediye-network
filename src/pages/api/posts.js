@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       console.log(bodyObject);
       myPost = await db
         .collection("posts")
-        .update(
+        .updateOne(
           { name: bodyObject.name },
           { $set: { votes: [...thisPost.votes, ...bodyObject.votes] } }
         );
