@@ -24,7 +24,7 @@ export default function Home() {
       <div className="flex flex-col items-center">
         <div className="flex flex-col gap-3 justify-center items-center mx-5">
           <div className="text-2xl font-bold mt-3 my-2">
-            Ahmediye Oylama Sistemi
+            Puan Sistemi
           </div>
           <p className="text-sm text-red-700">
             Talebe Numaranızı Giriniz (Yanlış Girmeniz Durumunda
