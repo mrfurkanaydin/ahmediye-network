@@ -27,6 +27,10 @@ export default function Votes({ allPosts, zort }) {
     let number = Number(await localStorage.getItem("number"));
     let voteList = JSON.parse(await localStorage.getItem("voteList"));
     setVoteList(voteList);
+    if (vote == undefined) {
+      alert("Lütfen Bir Puan Giriniz");
+      return;
+    }
     if (localStorage.getItem("voteList") == null) {
       await localStorage.setItem("voteList", JSON.stringify([name]));
     } else {
@@ -60,7 +64,10 @@ export default function Votes({ allPosts, zort }) {
             );
             const averageVote = sumVotes / totalVotes;
             return (
-              <div key={data.name} className="flex flex-col gap-2 w-2/3 items-center justify-center border p-5 rounded">
+              <div
+                key={data.name}
+                className="flex flex-col gap-2 w-2/3 items-center justify-center border p-5 rounded"
+              >
                 <div className="text-2xl font-bold">{data.name}</div>
                 <div>
                   {averageVote > 5 ? (
