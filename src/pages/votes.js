@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Votes({ allPosts }) {
   const [datas, setDatas] = useState(allPosts.data);
-  const [vote, setVote] = useState();
   const [votes, setVotes] = useState({});
-  const [voteList, setVoteList] = useState();
+  const notify = (data) => toast(data);
   const [local, setLocal] = useState();
   useEffect(() => {
     getData();
@@ -36,11 +37,11 @@ export default function Votes({ allPosts }) {
   let submitForm = async (name) => {
     let number = Number(await localStorage.getItem("number"));
     let voteList = JSON.parse(await localStorage.getItem("voteList"));
-    setVoteList(voteList);
-    if (votes[name] == undefined) {
-      alert("Lütfen Bir Puan Giriniz");
-      return;
-    }
+
+    // if (votes[name] == undefined) {
+    //   alert("Lütfen Bir Puan Giriniz");
+    //   return;
+    // }
     if (localStorage.getItem("voteList") == null) {
       await localStorage.setItem("voteList", JSON.stringify([name]));
     } else {
@@ -49,7 +50,7 @@ export default function Votes({ allPosts }) {
         JSON.stringify([...voteList, name])
       );
     }
-    let res = await fetch(`https://ahmediye-network.vercel.app/api/posts`, {
+    let res = await fetch(`http://localhost:3000/api/posts`, {
       method: "PUT",
       body: JSON.stringify({
         name,
@@ -57,11 +58,13 @@ export default function Votes({ allPosts }) {
       })
     });
     res = await res.json();
-    window.location.reload(false);
+    notify(res.data);
+    res.status == 200 && setTimeout(() => window.location.reload(false), 5000);
   };
 
   return (
     <div className="flex flex-col">
+      <ToastContainer />
       <div className="flex flex-col justify-center items-center gap-3 mx-2">
         <div className="text-2xl font-bold mt-3 my-2">Puan Sistemi</div>
         <>
@@ -98,15 +101,10 @@ export default function Votes({ allPosts }) {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="1 - 10 Arası Puan Veriniz"
                   required
-                  // onChange={(event) => {
-                  //   event.target.value > 10
-                  //     ? setVote(Number(10))
-                  //     : setVote(Number(event.target.value));
-                  // }}
                   onChange={(event) => {
                     onChangeText(event, data.name);
                   }}
-                  disabled={findItemByName(data.name)}
+                  // disabled={findItemByName(data.name)}
                   value={
                     votes[data.name] == 0
                       ? setVotes({
@@ -137,7 +135,7 @@ export default function Votes({ allPosts }) {
 }
 
 export async function getServerSideProps(context) {
-  let res = await fetch(`https://ahmediye-network.vercel.app/api/posts`, {
+  let res = await fetch(`http://localhost:3000/api/posts`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
