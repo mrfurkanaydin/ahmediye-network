@@ -79,7 +79,7 @@ export default function Votes({ allPosts }) {
             return (
               <div
                 key={data.name}
-                className="flex flex-col gap-2 w-2/3 items-center justify-center border p-5 rounded"
+                className="flex flex-col gap-2 w-2/3 items-center justify-center border p-5 rounded-2xl"
               >
                 <div className="text-2xl font-bold">{data.name}</div>
                 <div>
@@ -104,7 +104,7 @@ export default function Votes({ allPosts }) {
                   onChange={(event) => {
                     onChangeText(event, data.name);
                   }}
-                  // disabled={findItemByName(data.name)}
+                  disabled={findItemByName(data.name)}
                   value={
                     votes[data.name] == 0
                       ? setVotes({
