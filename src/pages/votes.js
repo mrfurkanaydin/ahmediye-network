@@ -38,10 +38,10 @@ export default function Votes({ allPosts }) {
     let number = Number(await localStorage.getItem("number"));
     let voteList = JSON.parse(await localStorage.getItem("voteList"));
 
-    // if (votes[name] == undefined) {
-    //   alert("Lütfen Bir Puan Giriniz");
-    //   return;
-    // }
+    if (votes[name] == undefined) {
+      alert("Lütfen Bir Puan Giriniz");
+      return;
+    }
     if (localStorage.getItem("voteList") == null) {
       await localStorage.setItem("voteList", JSON.stringify([name]));
     } else {
@@ -50,7 +50,7 @@ export default function Votes({ allPosts }) {
         JSON.stringify([...voteList, name])
       );
     }
-    let res = await fetch(`http://localhost:3000/api/posts`, {
+    let res = await fetch(`https://ahmediye-network.vercel.app/api/posts`, {
       method: "PUT",
       body: JSON.stringify({
         name,
@@ -135,7 +135,7 @@ export default function Votes({ allPosts }) {
 }
 
 export async function getServerSideProps(context) {
-  let res = await fetch(`http://localhost:3000/api/posts`, {
+  let res = await fetch(`https://ahmediye-network.vercel.app/api/posts`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
