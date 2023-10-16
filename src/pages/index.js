@@ -15,6 +15,10 @@ export default function Home() {
   }, []);
 
   const submitForm = async () => {
+    if (number == undefined) {
+      alert("Lütfen Talebe Numaranızı Giriniz");
+      return;
+    }
     await localStorage.setItem("number", number);
     router.push("/votes", { scroll: false });
   };
