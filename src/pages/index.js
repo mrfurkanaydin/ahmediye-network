@@ -42,7 +42,7 @@ export default function Home() {
                 ? setNumber(Number(106))
                 : setNumber(Number(event.target.value));
             }}
-            value={number}
+            value={number == 0 ? setNumber() : number}
           />
           <button
             onClick={submitForm}
