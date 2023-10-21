@@ -27,7 +27,7 @@ function Solution({ allSolutions }) {
 export default Solution;
 
 export async function getServerSideProps(context) {
-  let res = await fetch(`http://localhost:3000/api/solutions`, {
+  let res = await fetch(`https://ahmediye-network.vercel.app/api/solutions`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
