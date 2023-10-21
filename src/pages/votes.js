@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import { checkLocalStorage } from "@/utils/checkLocalStorage";
 
 export default function Votes({ allPosts }) {
   const [datas, setDatas] = useState(allPosts.data);
   const [votes, setVotes] = useState({});
+  const router = useRouter();
   const notify = (data) => toast(data);
   const [local, setLocal] = useState();
   useEffect(() => {
+    const storage = checkLocalStorage();
+    if (storage == null) {
+      router.push(`/`);
+    }
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getData = async () => {
@@ -66,7 +74,16 @@ export default function Votes({ allPosts }) {
     <div className="flex flex-col">
       <ToastContainer />
       <div className="flex flex-col justify-center items-center gap-3 mx-2">
-        <div className="text-2xl font-bold mt-3 my-2">Puan Sistemi</div>
+        <div className="flex flex-row items-center justify-center">
+          <button
+            onClick={() => router.push(`/hub`)}
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-3  dark:bg-blue-600 dark:hover:bg-blue-700 
+                  focus:outline-none dark:focus:ring-blue-800 mr-10"
+          >
+            Geri Dön
+          </button>
+          <div className="text-2xl font-bold mt-3 my-2">Puan Sistemi</div>
+        </div>
         <>
           {datas.map((data) => {
             const voteValues = data.votes.map((vote) => vote.vote);

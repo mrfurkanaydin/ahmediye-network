@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { checkLocalStorage } from "@/utils/checkLocalStorage";
 
 export default function Home() {
   const [number, setNumber] = useState();
   const router = useRouter();
 
-  useEffect(() => {}, []);
   useEffect(() => {
     const storage = checkLocalStorage();
     if (storage !== null) {
-      // Local storage'da "number" öğesi varsa, istediğiniz sayfaya yönlendirin.
-      router.push(`/votes`);
+      router.push(`/hub`);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitForm = async () => {
@@ -20,7 +20,7 @@ export default function Home() {
       return;
     }
     await localStorage.setItem("number", number);
-    router.push("/votes", { scroll: false });
+    router.push("/hub", { scroll: false });
   };
 
   return (
@@ -28,7 +28,7 @@ export default function Home() {
       <div className="flex flex-col items-center">
         <div className="flex flex-col gap-3 justify-center items-center mx-5">
           <div className="text-2xl font-bold mt-3 my-2">
-            Puan Sistemi
+            Giriş
           </div>
           <p className="text-sm text-red-700">
             Talebe Numaranızı Giriniz (Yanlış Girmeniz Durumunda
@@ -60,10 +60,4 @@ export default function Home() {
   );
 }
 
-function checkLocalStorage() {
-  const number = localStorage.getItem("number");
-  if (number) {
-    return parseInt(number, 10);
-  }
-  return null;
-}
+

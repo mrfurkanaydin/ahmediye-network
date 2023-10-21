@@ -1,5 +1,3 @@
-// posts.js
-
 import clientPromise from "../../lib/mongodb";
 
 export default async function handler(req, res) {
@@ -12,6 +10,7 @@ export default async function handler(req, res) {
     case "POST":
       bodyObject = JSON.parse(req.body);
       myPost = await db.collection("posts").insertOne(bodyObject);
+      console.log(myPost);
       res.json(myPost.ops[0]);
       break;
     case "GET":
