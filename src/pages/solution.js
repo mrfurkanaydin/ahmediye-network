@@ -21,7 +21,7 @@ function Solution() {
   };
   const submitForm = async () => {
     let number = Number(await localStorage.getItem("number"));
-    if (text == undefined) {
+    if (text == undefined || text == "") {
       alert("Formu Boş Gönderemezsin!");
       return;
     }
